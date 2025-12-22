@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace Companionship_Barracks
@@ -57,18 +58,15 @@ namespace Companionship_Barracks
 			{
 				return;
 			}
-			Log.Message($"[陪伴营房] {actor.Name.ToStringShort} 在兵营内与 {context.NumCohabitants} 人同住。开始应用想法规则。");
+			Log.Message($"[陪伴营房] {actor.Name.ToStringShort} 在营房内与 {context.NumCohabitants} 人同住。开始应用想法规则。");
 
 			ThoughtDef finalThoughtDef = null;
-			foreach (var rule in _thoughtRules)
+			foreach (var rule in _thoughtRules.Where(rule => rule.CanApply(context)))
 			{
-				if (rule.CanApply(context))
+				finalThoughtDef = rule.GetThought(context);
+				if (finalThoughtDef != null)
 				{
-					finalThoughtDef = rule.GetThought(context);
-					if (finalThoughtDef != null)
-					{
-						break;
-					}
+					break;
 				}
 			}
 			if (finalThoughtDef == null)
