@@ -34,12 +34,14 @@ namespace Companionship_Barracks
 			CompanionshipBarracksDefOf.SleptInBarracks_BrotherWithOlderSister
 		};
 
+		[HarmonyPrefix]
 		static bool Prefix(Pawn actor)
 		{
 			RemoveModThoughts(actor);
 			return true;
 		}
 
+		[HarmonyPostfix]
 		static void Postfix(Pawn actor)
 		{
 			if (!actor.IsColonist || actor.needs?.mood == null || actor.story.traits.HasTrait(TraitDefOf.Ascetic))

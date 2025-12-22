@@ -9,6 +9,7 @@ namespace Companionship_Barracks
         typeof(Pawn))]
     public static class MemoryThoughtHandler_Patch
     {
+        [HarmonyPrefix]
         public static bool Prefix(MemoryThoughtHandler __instance, Thought_Memory newThought, Pawn otherPawn)
         {
             if (newThought.def != ThoughtDefOf.GotSomeLovin || otherPawn == null)
@@ -34,8 +35,9 @@ namespace Companionship_Barracks
                 return true;
             }
 
-            newThought.def = isOlder ? MakeLoveDefOf.MakeLoveWithSister : MakeLoveDefOf.MadeLoveWithBrother;
-            return true;
+            var myThought = isOlder ? MakeLoveDefOf.MakeLoveWithSister : MakeLoveDefOf.MadeLoveWithBrother;
+            __instance.TryGainMemory(myThought, otherPawn);
+            return false;
         }
     }
 }

@@ -26,13 +26,16 @@ namespace Companionship_Barracks
 			}
 
 			bool isOlder = context.Actor.ageTracker.AgeBiologicalYears > sibling.ageTracker.AgeBiologicalYears;
-			if (context.Actor.gender == Gender.Male)
+			switch (context.Actor.gender)
 			{
-				return isOlder ? CompanionshipBarracksDefOf.SleptInBarracks_BrotherWithSister : CompanionshipBarracksDefOf.SleptInBarracks_BrotherWithOlderSister;
-			}
-			else // 女性
-			{
-				return isOlder ? CompanionshipBarracksDefOf.SleptInBarracks_SisterWithYoungerBrother : CompanionshipBarracksDefOf.SleptInBarracks_SisterWithBrother;
+				case Gender.Male:
+					return isOlder ? CompanionshipBarracksDefOf.SleptInBarracks_BrotherWithSister : CompanionshipBarracksDefOf.SleptInBarracks_BrotherWithOlderSister;
+				// 女性
+				case Gender.Female:
+					return isOlder ? CompanionshipBarracksDefOf.SleptInBarracks_SisterWithYoungerBrother : CompanionshipBarracksDefOf.SleptInBarracks_SisterWithBrother;
+				case Gender.None:
+				default:
+					return null;
 			}
 		}
 	}
