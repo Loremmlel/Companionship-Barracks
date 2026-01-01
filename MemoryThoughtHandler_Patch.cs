@@ -35,7 +35,7 @@ namespace Companionship_Barracks
                 return true;
             }
 
-            var myThought = isOlder ? MakeLoveDefOf.MakeLoveWithSister : MakeLoveDefOf.MadeLoveWithBrother;
+            var myThought = isOlder ? MakeLoveDefOf.MakeLoveWithSister : MakeLoveDefOf.MakeLoveWithBrother;
             __instance.TryGainMemory(myThought, otherPawn);
             return false;
         }

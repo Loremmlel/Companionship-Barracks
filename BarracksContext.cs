@@ -46,7 +46,7 @@ namespace Companionship_Barracks
 				bool isFamily = relations.Any(r => r.familyByBloodRelation);
 				int opinion = Actor.relations.OpinionOf(cohabitant);
 
-				if (isFamily && opinion >= 40)
+				if (isFamily && opinion >= 20)
 				{
 					bool counted = false;
 					foreach (var rel in relations)
@@ -77,8 +77,8 @@ namespace Companionship_Barracks
 				}
 				else
 				{
-					if (opinion >= 80) NumGoodFriends++;
-					else if (opinion >= 40) NumFriends++;
+					if (opinion >= 60) NumGoodFriends++;
+					else if (opinion >= 20) NumFriends++;
 					else if (opinion <= -20) NumEnemies++;
 				}
 			}

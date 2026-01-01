@@ -6,7 +6,7 @@ namespace Companionship_Barracks
     public static class MakeLoveDefOf
     {
         public static ThoughtDef MakeLoveWithSister;
-        public static ThoughtDef MadeLoveWithBrother;
+        public static ThoughtDef MakeLoveWithBrother;
         
         static MakeLoveDefOf()
         {   

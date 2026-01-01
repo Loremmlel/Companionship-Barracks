@@ -44,7 +44,7 @@ namespace Companionship_Barracks
 		[HarmonyPostfix]
 		static void Postfix(Pawn actor)
 		{
-			if (!actor.IsColonist || actor.needs?.mood == null || actor.story.traits.HasTrait(TraitDefOf.Ascetic))
+			if (!actor.IsOfColony() || actor.needs?.mood == null || actor.story.traits.HasTrait(TraitDefOf.Ascetic))
 			{
 				return;
 			}
@@ -63,9 +63,10 @@ namespace Companionship_Barracks
 			Log.Message($"[陪伴营房] {actor.Name.ToStringShort} 在营房内与 {context.NumCohabitants} 人同住。开始应用想法规则。");
 
 			ThoughtDef finalThoughtDef = null;
+			Pawn relatedPawn = null;
 			foreach (var rule in _thoughtRules.Where(rule => rule.CanApply(context)))
 			{
-				finalThoughtDef = rule.GetThought(context);
+				(finalThoughtDef, relatedPawn) = rule.GetThought(context);
 				if (finalThoughtDef != null)
 				{
 					break;
@@ -79,7 +80,7 @@ namespace Companionship_Barracks
 			int stageIndex = RoomStatDefOf.Impressiveness.GetScoreStageIndex(room.GetStat(RoomStatDefOf.Impressiveness));
 			actor.needs.mood.thoughts.memories.RemoveMemoriesOfDef(ThoughtDefOf.SleptInBarracks);
 			var thought = ThoughtMaker.MakeThought(finalThoughtDef, stageIndex);
-			actor.needs.mood.thoughts.memories.TryGainMemory(thought, null);
+			actor.needs.mood.thoughts.memories.TryGainMemory(thought, relatedPawn);
 			Log.Message($"[陪伴营房] {actor.Name.ToStringShort} 获得想法：{finalThoughtDef.defName}（等级{stageIndex}）。");
 		}
 
@@ -94,6 +95,14 @@ namespace Companionship_Barracks
 			{
 				pawn.needs.mood.thoughts.memories.RemoveMemoriesOfDef(thoughtDef);
 			}
+		}
+	}
+
+	public static class PawnExtensions
+	{
+		public static bool IsOfColony(this Pawn pawn)
+		{
+			return pawn.IsColonist || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony;
 		}
 	}
 }
