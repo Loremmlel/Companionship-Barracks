@@ -7,9 +7,9 @@ namespace Companionship_Barracks
     {
         public static ThoughtDef MakeLoveWithSister;
         public static ThoughtDef MakeLoveWithBrother;
-        
+
         static MakeLoveDefOf()
-        {   
+        {
             DefOfHelper.EnsureInitializedInCtor(typeof(MakeLoveDefOf));
         }
     }

@@ -6,103 +6,106 @@ using Verse;
 
 namespace Companionship_Barracks
 {
-	[HarmonyPatch(typeof(Toils_LayDown), "ApplyBedThoughts")]
-	public static class Toils_LayDown_Patch
-	{
-		private static readonly List<ThoughtRule> _thoughtRules = new List<ThoughtRule>
-		{
-			new SiblingSpecialRule(),
-			new FamilyOnlyRule(),
-			new MixedCompanyRule()
-		};
+    [HarmonyPatch(typeof(Toils_LayDown), "ApplyBedThoughts")]
+    public static class Toils_LayDown_Patch
+    {
+        private static readonly List<ThoughtRule> _thoughtRules = new List<ThoughtRule>
+        {
+            new SiblingSpecialRule(),
+            new FamilyOnlyRule(),
+            new MixedCompanyRule()
+        };
 
-		private static readonly List<ThoughtDef> _modThoughts = new List<ThoughtDef>
-		{
-			CompanionshipBarracksDefOf.SleptInBarracks_GoodFriends_NoEnemies,
-			CompanionshipBarracksDefOf.SleptInBarracks_Friends_NoEnemies,
-			CompanionshipBarracksDefOf.SleptInBarracks_GoodFriends_WithEnemies,
-			CompanionshipBarracksDefOf.SleptInBarracks_Friends_WithEnemies,
-			CompanionshipBarracksDefOf.SleptInBarracks_SomeEnemies,
-			CompanionshipBarracksDefOf.SleptInBarracks_ManyEnemies,
-			CompanionshipBarracksDefOf.SleptInBarracks_OnlySiblings,
-			CompanionshipBarracksDefOf.SleptInBarracks_OnlyParents,
-			CompanionshipBarracksDefOf.SleptInBarracks_OnlyChildren,
-			CompanionshipBarracksDefOf.SleptInBarracks_OnlyRelatives,
-			CompanionshipBarracksDefOf.SleptInBarracks_BrotherWithSister,
-			CompanionshipBarracksDefOf.SleptInBarracks_SisterWithBrother,
-			CompanionshipBarracksDefOf.SleptInBarracks_SisterWithYoungerBrother,
-			CompanionshipBarracksDefOf.SleptInBarracks_BrotherWithOlderSister
-		};
+        private static readonly List<ThoughtDef> _modThoughts = new List<ThoughtDef>
+        {
+            CompanionshipBarracksDefOf.SleptInBarracks_GoodFriends_NoEnemies,
+            CompanionshipBarracksDefOf.SleptInBarracks_Friends_NoEnemies,
+            CompanionshipBarracksDefOf.SleptInBarracks_GoodFriends_WithEnemies,
+            CompanionshipBarracksDefOf.SleptInBarracks_Friends_WithEnemies,
+            CompanionshipBarracksDefOf.SleptInBarracks_SomeEnemies,
+            CompanionshipBarracksDefOf.SleptInBarracks_ManyEnemies,
+            CompanionshipBarracksDefOf.SleptInBarracks_OnlySiblings,
+            CompanionshipBarracksDefOf.SleptInBarracks_OnlyParents,
+            CompanionshipBarracksDefOf.SleptInBarracks_OnlyChildren,
+            CompanionshipBarracksDefOf.SleptInBarracks_OnlyRelatives,
+            CompanionshipBarracksDefOf.SleptInBarracks_BrotherWithSister,
+            CompanionshipBarracksDefOf.SleptInBarracks_SisterWithBrother,
+            CompanionshipBarracksDefOf.SleptInBarracks_SisterWithYoungerBrother,
+            CompanionshipBarracksDefOf.SleptInBarracks_BrotherWithOlderSister
+        };
 
-		[HarmonyPrefix]
-		static bool Prefix(Pawn actor)
-		{
-			RemoveModThoughts(actor);
-			return true;
-		}
+        [HarmonyPrefix]
+        static bool Prefix(Pawn actor)
+        {
+            RemoveModThoughts(actor);
+            return true;
+        }
 
-		[HarmonyPostfix]
-		static void Postfix(Pawn actor)
-		{
-			if (!actor.IsOfColony() || actor.needs?.mood == null || actor.story.traits.HasTrait(TraitDefOf.Ascetic))
-			{
-				return;
-			}
+        [HarmonyPostfix]
+        static void Postfix(Pawn actor)
+        {
+            if (!actor.IsOfColony() || actor.needs?.mood == null || actor.story.traits.HasTrait(TraitDefOf.Ascetic))
+            {
+                return;
+            }
 
-			var room = actor.CurrentBed()?.GetRoom();
-			if (room == null || room.Role != RoomRoleDefOf.Barracks)
-			{
-				return;
-			}
+            var room = actor.CurrentBed()?.GetRoom();
+            if (room == null || room.Role != RoomRoleDefOf.Barracks)
+            {
+                return;
+            }
 
-			var context = new BarracksContext(actor, room);
-			if (context.NumCohabitants == 0)
-			{
-				return;
-			}
-			Log.Message($"[陪伴营房] {actor.Name.ToStringShort} 在营房内与 {context.NumCohabitants} 人同住。开始应用想法规则。");
+            var context = new BarracksContext(actor, room);
+            if (context.NumCohabitants == 0)
+            {
+                return;
+            }
 
-			ThoughtDef finalThoughtDef = null;
-			Pawn relatedPawn = null;
-			foreach (var rule in _thoughtRules.Where(rule => rule.CanApply(context)))
-			{
-				(finalThoughtDef, relatedPawn) = rule.GetThought(context);
-				if (finalThoughtDef != null)
-				{
-					break;
-				}
-			}
-			if (finalThoughtDef == null)
-			{
-				return;
-			}
+            Log.Message($"[陪伴营房] {actor.Name.ToStringShort} 在营房内与 {context.NumCohabitants} 人同住。开始应用想法规则。");
 
-			int stageIndex = RoomStatDefOf.Impressiveness.GetScoreStageIndex(room.GetStat(RoomStatDefOf.Impressiveness));
-			actor.needs.mood.thoughts.memories.RemoveMemoriesOfDef(ThoughtDefOf.SleptInBarracks);
-			var thought = ThoughtMaker.MakeThought(finalThoughtDef, stageIndex);
-			actor.needs.mood.thoughts.memories.TryGainMemory(thought, relatedPawn);
-			Log.Message($"[陪伴营房] {actor.Name.ToStringShort} 获得想法：{finalThoughtDef.defName}（等级{stageIndex}）。");
-		}
+            ThoughtDef finalThoughtDef = null;
+            Pawn       relatedPawn     = null;
+            foreach (var rule in _thoughtRules.Where(rule => rule.CanApply(context)))
+            {
+                (finalThoughtDef, relatedPawn) = rule.GetThought(context);
+                if (finalThoughtDef != null)
+                {
+                    break;
+                }
+            }
 
-		private static void RemoveModThoughts(Pawn pawn)
-		{
-			if (pawn.needs?.mood == null)
-			{
-				return;
-			}
+            if (finalThoughtDef == null)
+            {
+                return;
+            }
 
-			foreach (var thoughtDef in _modThoughts)
-			{
-				pawn.needs.mood.thoughts.memories.RemoveMemoriesOfDef(thoughtDef);
-			}
-		}
-	}
+            int stageIndex =
+                RoomStatDefOf.Impressiveness.GetScoreStageIndex(room.GetStat(RoomStatDefOf.Impressiveness));
+            actor.needs.mood.thoughts.memories.RemoveMemoriesOfDef(ThoughtDefOf.SleptInBarracks);
+            var thought = ThoughtMaker.MakeThought(finalThoughtDef, stageIndex);
+            actor.needs.mood.thoughts.memories.TryGainMemory(thought, relatedPawn);
+            Log.Message($"[陪伴营房] {actor.Name.ToStringShort} 获得想法：{finalThoughtDef.defName}（等级{stageIndex}）。");
+        }
 
-	public static class PawnExtensions
-	{
-		public static bool IsOfColony(this Pawn pawn)
-		{
-			return pawn.IsColonist || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony;
-		}
-	}
+        private static void RemoveModThoughts(Pawn pawn)
+        {
+            if (pawn.needs?.mood == null)
+            {
+                return;
+            }
+
+            foreach (var thoughtDef in _modThoughts)
+            {
+                pawn.needs.mood.thoughts.memories.RemoveMemoriesOfDef(thoughtDef);
+            }
+        }
+    }
+
+    public static class PawnExtensions
+    {
+        public static bool IsOfColony(this Pawn pawn)
+        {
+            return pawn.IsColonist || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony;
+        }
+    }
 }
