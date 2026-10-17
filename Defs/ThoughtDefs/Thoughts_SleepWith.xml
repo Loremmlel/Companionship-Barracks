@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+  <ThoughtDef>
+    <defName>SleepWithSister</defName>
+    <thoughtClass>Thought_SharedBed</thoughtClass>
+    <workerClass>ThoughtWorker_SharedBed</workerClass>
+    <developmentalStageFilter>Adult</developmentalStageFilter>
+    <stages>
+      <li>
+        <label>和亲妹妹一起睡觉</label>
+        <description>I have to share a bed with someone who I don't particularly want to.</description>
+      </li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>SleepWithBrother</defName>
+    <thoughtClass>Thought_SharedBed</thoughtClass>
+    <workerClass>ThoughtWorker_SharedBed</workerClass>
+    <developmentalStageFilter>Adult</developmentalStageFilter>
+    <stages>
+      <li>
+        <label>和亲哥哥一起睡觉</label>
+        <description>I have to share a bed with someone who I don't particularly want to.</description>
+      </li>
+    </stages>
+  </ThoughtDef>
+</Defs>

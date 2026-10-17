@@ -25,7 +25,7 @@ namespace Companionship_Barracks
                 return (null, null); // 不满足特殊条件，退回至其他规则
             }
 
-            bool isOlder = context.Actor.ageTracker.AgeBiologicalYears > sibling.ageTracker.AgeBiologicalYears;
+            bool isOlder = context.Actor.ageTracker.AgeBiologicalYearsFloat > sibling.ageTracker.AgeBiologicalYearsFloat;
             switch (context.Actor.gender)
             {
                 case Gender.Male:

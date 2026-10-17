@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+  <ThoughtDef>
+    <defName>MakeLoveWithSister</defName>
+    <thoughtClass>Thought_MemorySocial</thoughtClass>
+    <durationDays>3</durationDays>
+    <stackLimit>10</stackLimit>
+    <stackedEffectMultiplier>0.6</stackedEffectMultiplier>
+    <developmentalStageFilter>Adult</developmentalStageFilter>
+    <stages>
+      <li>
+        <label>和亲妹妹滚床单</label>
+        <description>妹妹紧紧抱着我，在耳边吐着热气，呻吟，诉说甜蜜的话语。我们会永远在一起。</description>
+        <baseMoodEffect>10</baseMoodEffect>
+        <baseOpinionOffset>8</baseOpinionOffset>
+      </li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>MakeLoveWithBrother</defName>
+    <thoughtClass>Thought_MemorySocial</thoughtClass>
+    <durationDays>3</durationDays>
+    <stackLimit>10</stackLimit>
+    <stackedEffectMultiplier>0.6</stackedEffectMultiplier>
+    <developmentalStageFilter>Adult</developmentalStageFilter>
+    <stages>
+      <li>
+        <label>和亲哥哥滚床单</label>
+        <description>和哥哥融为一体，灼热湿润的花蕊包裹着花茎，我已经沉醉在这样的快感里了。</description>
+        <baseMoodEffect>10</baseMoodEffect>
+        <baseOpinionOffset>8</baseOpinionOffset>
+      </li>
+    </stages>
+  </ThoughtDef>
+</Defs>

@@ -26,7 +26,7 @@ namespace Companionship_Barracks
             var  relations        = pawn.GetRelations(otherPawn);
             bool isSibling        = relations.Any(r => r.defName == PawnRelationDefOf.Sibling.defName);
             bool isOppositeGender = pawn.gender                        != otherPawn.gender;
-            bool isOlder          = pawn.ageTracker.AgeBiologicalYears > otherPawn.ageTracker.AgeBiologicalYears;
+            bool isOlder          = pawn.ageTracker.AgeBiologicalYearsFloat > otherPawn.ageTracker.AgeBiologicalYearsFloat;
             bool isBrotherWithYoungerSister = isSibling && isOppositeGender &&
                                               (pawn.gender == Gender.Male   && isOlder ||
                                                pawn.gender == Gender.Female && !isOlder);
