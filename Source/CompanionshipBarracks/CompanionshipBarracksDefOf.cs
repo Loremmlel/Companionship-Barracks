@@ -1,6 +1,6 @@
 ﻿using RimWorld;
 
-namespace Companionship_Barracks
+namespace CompanionshipBarracks
 {
     [DefOf]
     public static class CompanionshipBarracksDefOf

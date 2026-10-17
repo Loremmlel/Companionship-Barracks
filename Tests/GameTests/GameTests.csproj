@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>CompanionshipBarracks.GameTests</AssemblyName>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Source/CompanionshipBarracks/CompanionshipBarracks.csproj" Private="false" />
+    <Reference Include="Assembly-CSharp" HintPath="$(RimWorldDir)/Assembly-CSharp.dll" Private="false" />
+    <Reference Include="UnityStubs" HintPath="$(RimWorldDir)/UnityStubs.dll" Private="false" />
+    <Reference Include="0Harmony" HintPath="$(HarmonyDir)/0Harmony.dll" Private="false" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Companionship Barracks Integration Tests</name>
+  <author>ShikiYuzu</author>
+  <packageId>shikiyuzu.companionshipbarracks.tests</packageId>
+  <supportedVersions><li>1.7</li></supportedVersions>
+  <loadAfter><li>shikiyuzu.zompanionship_barracks</li></loadAfter>
+  <description>Isolated development tests. Runs only with -cb-tests and exits its own test process.</description>
+</ModMetaData>

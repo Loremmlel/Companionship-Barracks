@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Companionship Barracks</AssemblyName>
+    <RootNamespace>CompanionshipBarracks</RootNamespace>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <DebugType>embedded</DebugType>
+    <OutputPath>../../1.7/Assemblies/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp" HintPath="$(RimWorldDir)/Assembly-CSharp.dll" Private="false" />
+    <Reference Include="UnityStubs" HintPath="$(RimWorldDir)/UnityStubs.dll" Private="false" />
+    <Reference Include="0Harmony" HintPath="$(HarmonyDir)/0Harmony.dll" Private="false" />
+  </ItemGroup>
+  <Target Name="ValidateGameReferences" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="!Exists('$(RimWorldDir)/Assembly-CSharp.dll') Or !Exists('$(RimWorldDir)/UnityStubs.dll')" Text="Set RimWorldDir to the RimWorld 1.7 installation root." />
+    <Error Condition="!Exists('$(HarmonyDir)/0Harmony.dll')" Text="Set HarmonyDir to Harmony's 1.7/Assemblies directory." />
+  </Target>
+</Project>

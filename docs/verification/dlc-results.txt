@@ -1,0 +1,102 @@
+PASS XML loaded: ten barracks stages
+PASS XML loaded: event duration
+PASS Barracks patch registered in the actual game runtime
+PASS Event patch registered in the actual game runtime
+PASS Positive bedroom cleanup patch registered
+PASS Exactly one version of the mod assembly loaded
+PASS Mod loaded only from isolated directory: E:\Code\Companionship-Barracks\obj\game-tests-20261017-134129\runtime\Mods\Main
+PASS Active DLL path: E:\Code\Companionship-Barracks\obj\game-tests-20261017-134129\runtime\Mods\Main\1.7\Assemblies\Companionship Barracks.dll
+PASS Opinion boundary -21
+PASS Opinion boundary -20
+PASS Opinion boundary -19
+PASS Opinion boundary 19
+PASS Opinion boundary 20
+PASS Opinion boundary 59
+PASS Opinion boundary 60
+PASS Family requires opinion 20
+PASS Family classification exclusive and sibling first
+PASS Parent precedes child
+PASS Child classification
+PASS Other blood family counted
+PASS Rule  -> KeepVanilla
+PASS Rule Neutral -> KeepVanilla
+PASS Rule Sibling -> OnlySiblings
+PASS Rule Parent -> OnlyParents
+PASS Rule Child -> OnlyChildren
+PASS Rule OtherFamily -> OnlyRelatives
+PASS Rule Sibling,Parent -> OnlyRelatives
+PASS Rule GoodFriend -> GoodFriends_NoEnemies
+PASS Rule Friend -> Friends_NoEnemies
+PASS Rule Friend,Friend,Friend,Neutral,Neutral -> Friends_NoEnemies
+PASS Rule Friend,Friend,GoodFriend,Neutral,Neutral -> Friends_NoEnemies
+PASS Rule Sibling,Friend,Neutral -> Friends_NoEnemies
+PASS Rule GoodFriend,Enemy -> GoodFriends_WithEnemies
+PASS Rule Friend,Enemy -> Friends_WithEnemies
+PASS Rule Enemy,Neutral,Neutral -> SomeEnemies
+PASS Rule Enemy,Neutral -> ManyEnemies
+PASS Rule Friend,Neutral,Neutral -> KeepVanilla
+PASS Actual game world and map generated
+PASS Fixture room is an actual barracks
+PASS Bed owner collection excludes actor
+PASS Duplicate bed owner is counted once
+PASS Fixture sibling opinion reaches special threshold
+PASS Barracks male older mapping
+PASS Barracks male younger mapping
+PASS Barracks female younger mapping
+PASS Barracks female older mapping
+PASS Equal ticks use ordinary sibling barracks
+PASS Gender.None does not select special barracks
+PASS Same sex uses ordinary sibling barracks
+PASS Before deadline and early leave do not manufacture sleep memory
+PASS Deadline submits and replaces vanilla memory with correct target
+PASS Vanilla duration and leave flag preserved
+PASS Original stage retained and vanilla removed only after acceptance
+PASS Vanilla leave settlement renews only one custom sleep memory
+PASS Rejected barracks candidate preserves this settlement's vanilla memory
+PASS Skipped original settlement leaves custom memories untouched
+PASS All existing stages retained: 0
+PASS All existing stages retained: 1
+PASS All existing stages retained: 2
+PASS All existing stages retained: 3
+PASS All existing stages retained: 4
+PASS All existing stages retained: 5
+PASS All existing stages retained: 6
+PASS All existing stages retained: 7
+PASS All existing stages retained: 8
+PASS All existing stages retained: 9
+PASS Invalid stage falls back to vanilla
+PASS Non-owned bed clears stale custom memory without replacement
+PASS Ascetic follows vanilla eligibility
+PASS Prisoner bed follows vanilla exclusion
+PASS Unowned medical bed does not manufacture barracks effect
+PASS Pawn without mood exits vanilla and patch safely
+PASS Positive cleanup retains zero and negative custom effects
+PASS Both supported event perspectives
+PASS Equal-age event retains vanilla
+PASS Unmapped event keeps the exact original instance
+PASS Unconfigured age direction retains vanilla
+PASS Gender.None event retains vanilla
+PASS Ideology fixture has non-null precept context
+PASS Event retains runtime context and its own social defaults, multiplier=1
+PASS Existing base mood 10 yields 10 after runtime multiplier
+PASS Event retains runtime context and its own social defaults, multiplier=1.5
+PASS Existing base mood 10 yields 15 after runtime multiplier
+PASS One side never manufactures the other side's submission
+PASS Other side's own submission creates one correct result
+PASS Rejected new event cannot mistake old same-Def memory for acceptance
+PASS Missing event Def preserves original instance
+PASS Original eligibility rejection is not bypassed
+PASS Candidate filter rejection returns original instance
+PASS Repeated events retain ten-stack cap, newest event and original decay/duration
+PASS Sleep settlement does not clear event history
+PASS Event submission does not clear sleep memory
+PASS Unclaimed beds are not residents
+PASS Zero-resident settlement returns to vanilla
+PASS After removing second bed, role=Bedroom
+PASS Bedroom transition follows vanilla, including its null stage
+PASS Ground environmental memory preserved
+PASS Save/load preserves sleep Def, stage, age and pawn reference
+PASS Save/load preserves event age, multiplier, partner and stack without duplication
+PASS Save/load retains vanilla sleep deadline and leave flag
+PASS Sleep expires after one day independently of event
+PASS Event expires after its configured duration
