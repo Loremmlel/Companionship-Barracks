@@ -8,7 +8,7 @@ using CompanionshipBarracks.SiblingLovin;
 namespace CompanionshipBarracks.GameTests;
 
 [StaticConstructorOnStartup]
-public static class GameTests
+public static partial class GameTests
 {
     private static readonly List<string> Results = new();
 
@@ -48,8 +48,9 @@ public static class GameTests
             Check(AppDomain.CurrentDomain.GetAssemblies().Count(a => a.GetName().Name == "Companionship Barracks") == 1,
                 "Exactly one version of the mod assembly loaded");
             var content = LoadedModManager.RunningMods.Single(m => m.PackageIdPlayerFacing.ToLowerInvariant() == "shikiyuzu.zompanionship_barracks");
-            Check(Path.GetFullPath(content.RootDir) == Path.GetFullPath(Path.Combine(GenFilePaths.ModsFolderPath, "Main")),
-                "Mod loaded only from isolated directory: " + content.RootDir);
+            Check(GenCommandLine.TryGetCommandLineArg("cb-mod-path", out var expectedMod)
+                && Path.GetFullPath(content.RootDir) == Path.GetFullPath(expectedMod),
+                "Mod loaded only from temporary candidate in actual game directory: " + content.RootDir);
             var loadedAssembly = typeof(BedThoughtPatch).Assembly;
             Check(Path.GetFullPath(loadedAssembly.Location) == Path.GetFullPath(Path.Combine(content.RootDir, "1.7", "Assemblies", "Companionship Barracks.dll")),
                 "Active DLL path: " + loadedAssembly.Location);
@@ -303,6 +304,7 @@ public static class GameTests
         Settle(a, null);
         Check(memories.GetFirstMemoryOfDef(ThoughtDefOf.SleptOnGround) != null, "Ground environmental memory preserved");
         harness.UnpatchAll("companionship.tests");
+        SharedBedTests(map);
 
         // 同一游戏的实际保存/读取，涵盖两种记忆与原版睡眠期限。
         var saveSleep = (Thought_Memory)ThoughtMaker.MakeThought(CompanionshipBarracksDefOf.SleptInBarracks_BrotherWithSister, 7);

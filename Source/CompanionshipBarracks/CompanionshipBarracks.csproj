@@ -1,22 +1,32 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <RimWorldVersion Condition="'$(RimWorldVersion)' == ''">1.7</RimWorldVersion>
+    <TargetFramework Condition="'$(RimWorldVersion)' == '1.7'">net10.0</TargetFramework>
+    <TargetFramework Condition="'$(RimWorldVersion)' == '1.6'">net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
     <AssemblyName>Companionship Barracks</AssemblyName>
     <RootNamespace>CompanionshipBarracks</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <DebugType>embedded</DebugType>
-    <OutputPath>../../1.7/Assemblies/</OutputPath>
+    <OutputPath>../../$(RimWorldVersion)/Assemblies/</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(RimWorldVersion)' == '1.7'">
     <Reference Include="Assembly-CSharp" HintPath="$(RimWorldDir)/Assembly-CSharp.dll" Private="false" />
     <Reference Include="UnityStubs" HintPath="$(RimWorldDir)/UnityStubs.dll" Private="false" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(RimWorldVersion)' == '1.6'">
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4871" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="0Harmony" HintPath="$(HarmonyDir)/0Harmony.dll" Private="false" />
   </ItemGroup>
   <Target Name="ValidateGameReferences" BeforeTargets="ResolveAssemblyReferences">
-    <Error Condition="!Exists('$(RimWorldDir)/Assembly-CSharp.dll') Or !Exists('$(RimWorldDir)/UnityStubs.dll')" Text="Set RimWorldDir to the RimWorld 1.7 installation root." />
-    <Error Condition="!Exists('$(HarmonyDir)/0Harmony.dll')" Text="Set HarmonyDir to Harmony's 1.7/Assemblies directory." />
+    <Error Condition="'$(RimWorldVersion)' != '1.6' And '$(RimWorldVersion)' != '1.7'" Text="RimWorldVersion must be 1.6 or 1.7." />
+    <Error Condition="'$(RimWorldVersion)' == '1.7' And (!Exists('$(RimWorldDir)/Assembly-CSharp.dll') Or !Exists('$(RimWorldDir)/UnityStubs.dll'))" Text="Set RimWorldDir to the RimWorld 1.7 installation root." />
+    <Error Condition="!Exists('$(HarmonyDir)/0Harmony.dll')" Text="Set HarmonyDir to the matching Harmony version's Assemblies directory." />
   </Target>
 </Project>

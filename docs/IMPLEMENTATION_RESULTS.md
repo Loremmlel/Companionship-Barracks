@@ -1,4 +1,21 @@
-# 两组功能修复与 RimWorld 1.7 验收
+# 功能修复与 RimWorld 1.7 验收
+
+## 近亲共床后续验收（2026-10-17）
+
+已补齐近亲共床免罚、非伴侣兄弟姐妹好感 ≥60 的单项 +3 情境心情，以及同床兄弟姐妹打扰时完全不生成记忆。伴侣规则优先；近亲只包含父母、子女、兄弟姐妹（含 HalfSibling）。多人床上的非近亲非伴侣仍保留原版惩罚。
+
+- 删除 `Thoughts_SleepWith.xml`、`Thoughts_Memory_Misc.xml`，用 `Thoughts_SharedBed.xml` 接入实际关系判断。原来两组营房/事件 XML 的 SHA-256 与下方历史记录一致，文案和数值未改。
+- 1.7 Release 构建：0 warnings / 0 errors。DLL SHA-256：`D9BCBB71D654B436A61F1BC3DCEC83047C4DF29792EE2E7537A17804382E59ED`。
+- 在当前安装 `E:\SteamLibrary\steamapps\common\RimWorld\RimWorld.exe` 中运行 Core + Harmony + 候选模组 + 测试插件，全部断言通过，退出码 0。包含真实世界/地图、原来两组记忆回归、实际保存读取及新增共床检查。
+- 新增检查覆盖 -100/59/60/100、双方好感独立、伴侣优先、HalfSibling、父母/子女双向、祖辈排除、混合多人床、取消床位，以及实际睡眠状态下的原版打扰方法。确认同床兄弟姐妹没有任何记忆且冷却不变，其他来源照常产生原版记忆。
+- 安装脚本 10 项检查通过，包括新 Def 安装和废弃文件不残留。夹具在 finally 中删除。
+- 游戏测试直接使用安装目录；候选包和测试插件临时放入 Mods。原模组、模组列表和日志已恢复，临时保存/缓存/备份已删除。检查确认只剩原来的一个正式模组目录，没有 `.companionship-test-*` 或测试模组目录。正式安装 DLL 仍为测试前版本，SHA-256：`230E6147971EE973F1DA865D76D3CDD5E1E47CC4C520A0418920EF330193F163`；本轮新功能尚未部署到日常安装。
+- 以前 `obj/` 下的游戏副本、测试存档与安装夹具已清理；先解除目录链接，再删除测试目录，没有删除链接指向的游戏资源。
+- 1.6 共用源码已用 [Krafs.Rimworld.Ref 1.6.4871](https://www.nuget.org/packages/Krafs.Rimworld.Ref/1.6.4871) 编译通过，0 warnings / 0 errors，产物放入 1.6 路由。按用户最新要求停止旧版本维护与额外验证；未做 1.6 游戏实测。本轮也未重复 DLC 全组合或用户大型旧存档测试。
+
+测试代码见 `Tests/GameTests/SharedBedTests.cs`。这里验证了实际方法调用和存档，不等同于长时间人工游玩或完整第三方模组兼容测试。
+
+## 之前两组记忆修复的历史记录
 
 日期：2026-10-17。设计先提交为 `0b36414`，随后实施。四份 XML 均保持字节一致；1.6 DLL 保留旧版，修复版用于 1.7。
 
@@ -30,7 +47,7 @@
 | Core + Harmony + 修复版 + 测试插件 | 95 项通过，退出码 0；见 `verification/core-results.txt` |
 | Core + Royalty + Ideology + Biotech + Harmony + 修复版 + 测试插件 | 102 项通过，退出码 0；见 `verification/dlc-results.txt`。与本机当时用户配置中的三个 DLC 一致，并额外启用 Harmony、本模组和测试插件 |
 
-测试记录分别来自 `obj/game-tests-20261017-133708/` 与 `obj/game-tests-20261017-134129/`，保留完整临时运行目录、测试存档和结果。游戏根文件复制到独立 runtime，大资源目录使用 junction；Mods、配置、存档独立。没有把原游戏的整个 Mods 链接进测试目录。
+历史测试记录分别来自 `obj/game-tests-20261017-133708/` 与 `obj/game-tests-20261017-134129/`。当时游戏根文件复制到独立 runtime，大资源目录使用 junction；Mods、配置、存档独立。按后续要求，这些临时目录已经清理，只保留仓库内已有的精简验收记录；当前测试脚本不再复制游戏。
 
 实际进程断言本模组只有一份，且 DLL 来自 `runtime/Mods/Main/1.7/Assemblies/Companionship Barracks.dll`。原安装目录的 `Mods/Companionship Barracks` 未参与最终测试，未被本次部署覆盖。
 
@@ -87,4 +104,4 @@ PowerShell 7，在仓库中执行（需要 .NET 10 SDK 与本地已安装游戏�
   -Expansions @('ludeon.rimworld.royalty', 'ludeon.rimworld.ideology', 'ludeon.rimworld.biotech')
 ```
 
-脚本每次建立新的 `obj/game-tests-*`，构建测试和发布 DLL，最多等待 240 秒，只结束自己启动的测试进程。失败保留现场。测试源码/断言详见 `Tests/GameTests/GameTests.cs`；不要将测试插件装进日常存档。
+当前脚本构建测试和发布 DLL，直接运行传入安装目录中的游戏，最多等待 240 秒，只结束自己启动的测试进程。临时模组位于游戏 Mods 中，临时存档位于游戏根目录的 `.companionship-test-*`；成功或失败均在 finally 恢复原模组、列表与日志并清理临时内容，结果输出到终端。测试源码/断言详见 `Tests/GameTests/`；不要将测试插件装进日常存档。旧版本不纳入当前回归矩阵。

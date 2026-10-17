@@ -9,6 +9,7 @@ $steam = Join-Path $fixture 'Steam'
 $library = Join-Path $fixture 'Custom Library'
 $game = Join-Path $library 'steamapps/common/Custom RimWorld'
 $old = Join-Path $game 'Mods/My old mod'
+try {
 New-Item -ItemType Directory -Path "$steam/steamapps", "$old/About", "$old/Source", "$old/Defs", "$old/Assemblies" -Force | Out-Null
 # 生成测试安装数据，不启动游戏。
 Set-Content "$steam/steamapps/libraryfolders.vdf" ('"libraryfolders" { "0" { "path" "' + $library.Replace('\', '\\') + '" } }')
@@ -28,6 +29,8 @@ $backups = @(Get-ChildItem "$game/ModBackups" -Directory)
 Assert ($backups.Count -eq 1 -and (Get-Content "$($backups[0].FullName)/Source/preserve.txt") -eq 'original source') 'Whole original directory is backed up outside Mods'
 Assert (!(Test-Path "$old/Defs") -and !(Test-Path "$old/Assemblies") -and !(Test-Path "$old/Source")) 'Old root definitions, assemblies and source do not leak into new installation'
 Assert ((Get-FileHash "$old/1.7/Assemblies/Companionship Barracks.dll").Hash -eq (Get-FileHash "$repo/1.7/Assemblies/Companionship Barracks.dll").Hash) 'Installed DLL matches build output'
+Assert ((Get-FileHash "$old/Common/Defs/ThoughtDefs/Thoughts_SharedBed.xml").Hash -eq (Get-FileHash "$repo/Common/Defs/ThoughtDefs/Thoughts_SharedBed.xml").Hash) 'Shared-bed definition is installed'
+Assert (!(Test-Path "$old/Common/Defs/ThoughtDefs/Thoughts_SleepWith.xml") -and !(Test-Path "$old/Common/Defs/ThoughtDefs/Thoughts_Memory_Misc.xml")) 'Obsolete definitions are not installed'
 Assert ((@(Get-ChildItem "$game/Mods" -Directory)).Count -eq 1) 'Only one mod copy remains in Mods'
 
 New-Item -ItemType Directory "$fixture/Harmony" | Out-Null
@@ -37,4 +40,8 @@ $failed = $false
 try { & $installer -RimWorldDir $game -HarmonyDir "$fixture/Harmony" -Dotnet "$fixture/fail-build.ps1" }
 catch { $failed = $_.Exception.Message -like '构建失败*' }
 Assert ($failed -and (@(Get-ChildItem "$game/ModBackups" -Directory)).Count -eq 1 -and (Test-Path "$old/LoadFolders.xml")) 'Build failure preserves existing installation'
-Write-Host "Test artifacts: $fixture"
+}
+finally {
+    if (![IO.Path]::GetFullPath($fixture).StartsWith([IO.Path]::GetFullPath("$repo/obj") + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw 'Cleanup path outside repository obj directory' }
+    if (Test-Path -LiteralPath $fixture) { Remove-Item -LiteralPath $fixture -Recurse -Force }
+}

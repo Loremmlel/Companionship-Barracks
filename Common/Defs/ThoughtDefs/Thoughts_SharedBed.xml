@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThoughtDef>
+    <defName>SharedBedWithCloseSibling</defName>
+    <workerClass>CompanionshipBarracks.SharedBed.ThoughtWorker_CloseSiblingBed</workerClass>
+    <stages>
+      <li>
+        <label>与亲近的兄弟姐妹同床</label>
+        <description>和关系亲近的兄弟姐妹共用床位，让我感到安心。</description>
+        <baseMoodEffect>3</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+</Defs>

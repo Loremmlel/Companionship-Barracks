@@ -108,9 +108,8 @@ $backup = Join-Path $backupRoot "Companionship Barracks-$id"
 foreach ($path in $stage, $backup) {
     if (![IO.Path]::GetFullPath($path).StartsWith($backupRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw "备份路径越界：$path" }
 }
-New-Item -ItemType Directory -Path "$stage/1.6/Assemblies", "$stage/1.7/Assemblies" -Force | Out-Null
-Copy-Item -LiteralPath "$repo/About", "$repo/Common", "$repo/LoadFolders.xml" -Destination $stage -Recurse
-foreach ($version in '1.6', '1.7') { Copy-Item -LiteralPath "$repo/$version/Assemblies/Companionship Barracks.dll" -Destination "$stage/$version/Assemblies" }
+New-Item -ItemType Directory -Path $stage -Force | Out-Null
+Copy-Item -LiteralPath "$repo/About", "$repo/Common", "$repo/1.6", "$repo/1.7", "$repo/LoadFolders.xml" -Destination $stage -Recurse
 New-Item -ItemType Directory -Path $mods -Force | Out-Null
 if (Test-Path -LiteralPath $destination) { Move-Item -LiteralPath $destination -Destination $backup }
 try { Move-Item -LiteralPath $stage -Destination $destination }
