@@ -2,7 +2,7 @@
 param(
     [Parameter(Mandatory)][string]$RimWorldDir,
     [Parameter(Mandatory)][string]$HarmonyModDir,
-    [string]$Dotnet = 'dotnet',
+    [string]$Dotnet,
     [string[]]$Expansions = @(),
     [int]$TimeoutSeconds = 240
 )
@@ -12,7 +12,10 @@ $game = (Resolve-Path -LiteralPath $RimWorldDir).Path.TrimEnd('\', '/')
 $harmony = (Resolve-Path -LiteralPath $HarmonyModDir).Path
 if (!(Test-Path -LiteralPath "$game/RimWorld.exe")) { throw 'Invalid game directory' }
 if (Get-Process RimWorld -ErrorAction SilentlyContinue) { throw '请先退出 RimWorld，再运行测试。' }
-$env:DOTNET_CLI_HOME = Join-Path $repo 'obj/dotnet-home'
+$environment = Join-Path (Split-Path $repo -Parent) 'Use-DevEnvironment.ps1'
+if (Test-Path -LiteralPath $environment) { . $environment }
+else { $env:DOTNET_CLI_HOME = Join-Path $repo 'obj/dotnet-home' }
+if (!$Dotnet) { $Dotnet = 'dotnet' }
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
 $env:DOTNET_GENERATE_ASPNET_CERTIFICATE = 'false'
 & $Dotnet build "$PSScriptRoot/GameTests/GameTests.csproj" -c Release "-p:RimWorldDir=$game" "-p:HarmonyDir=$harmony/1.7/Assemblies" --nologo

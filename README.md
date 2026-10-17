@@ -15,9 +15,11 @@
 
 ## 构建 1.7
 
-需要 .NET 10 SDK、本地 RimWorld 1.7 和 Harmony 1.7 程序集。在 PowerShell 7 中运行，替换为自己的路径：
+需要 .NET 10 SDK、本地 RimWorld 1.7 和 Harmony 1.7 程序集。本工作区的 SDK、NuGet 缓存和反编译资源已集中到上级目录 `.shared/`。在 PowerShell 7 中运行，替换为自己的路径：
 
 ```powershell
+# 在共享工作区内，先导入上级开发环境；独立克隆时使用自己的 .NET 10 SDK。
+if (Test-Path ../Use-DevEnvironment.ps1) { . ../Use-DevEnvironment.ps1 }
 dotnet build '.\Companionship Barracks.sln' -c Release `
   '-p:RimWorldDir=E:\SteamLibrary\steamapps\common\RimWorld' `
   '-p:HarmonyDir=E:\SteamLibrary\steamapps\workshop\content\294100\2009463077\1.7\Assemblies'
@@ -27,19 +29,19 @@ dotnet build '.\Companionship Barracks.sln' -c Release `
 
 ## 安装
 
-PowerShell 7 中运行仓库根目录脚本即可自动定位、构建并安装：
+安装入口已迁到上级 `RimWorld Mods` 工作区。PowerShell 7 中，在本 Mod 目录运行：
 
 ```powershell
-./Install-Mod.ps1 -WhatIf   # 预览识别结果，不构建或安装
-./Install-Mod.ps1           # Release 构建后安装
-./Install-Mod.ps1 -SkipBuild # 直接安装已构建的 DLL
+../Install-Mod.ps1 -Mod Companionship-Barracks -WhatIf   # 预览识别结果，不构建或安装
+../Install-Mod.ps1 -Mod Companionship-Barracks           # Release 构建后安装
+../Install-Mod.ps1 -Mod Companionship-Barracks -SkipBuild # 直接安装已构建的 DLL
 ```
 
-查找各个就绪磁盘根目录、`Program Files`、`Program Files (x86)` 和 `Games` 下名称包含 Steam 的目录，结合注册表和 `libraryfolders.vdf`，再通过 RimWorld manifest 定位游戏；不递归扫描整盘。多个安装时用 `-RimWorldDir` 指定。也可指定 `-HarmonyDir`（Harmony 的 `1.7/Assemblies`）和 `-Dotnet`（SDK 可执行文件）；默认优先使用仓库 `obj/tools/dotnet/dotnet.exe`，否则使用 PATH 中的 dotnet。
+查找各个就绪磁盘根目录、`Program Files`、`Program Files (x86)` 和 `Games` 下名称包含 Steam 的目录，结合注册表和 `libraryfolders.vdf`，再通过 RimWorld manifest 定位游戏；不递归扫描整盘。多个安装时用 `-RimWorldDir` 指定。也可指定 `-HarmonyDir`（Harmony 的 `1.7/Assemblies`）和 `-Dotnet`（SDK 可执行文件）；默认使用上级 `.shared/tools/dotnet/dotnet.exe`，缺少时使用 PATH 中的 dotnet。通用安装参数和共享环境说明见上级 `README.md`。
 
 脚本按 packageId 找到旧副本并替换，保留旧目录名称。旧版整个目录（含原源码）移至游戏的 `ModBackups/`，不会留在 `Mods/` 重复扫描。新目录只含发布内容，构建失败不触碰旧安装。安装前退出游戏；脚本不自动启用模组或修改存档。当前针对 1.7，附带仓库中的 1.6 DLL。
 
-脚本回归检查：`./Tests/Test-InstallMod.ps1`，在仓库 `obj/` 中验证路径发现、备份替换、定义安装、预览无写入和构建失败保留旧包，结束后删除夹具。
+脚本回归检查已迁到上级：`../Tests/Test-InstallMod.ps1`，验证路径发现、多 Mod 安装、备份替换、定义安装、预览无写入和构建失败保留旧包，结束后删除工作区内的夹具。
 
 也可手动安装：
 
