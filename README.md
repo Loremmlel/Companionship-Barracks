@@ -27,6 +27,22 @@ dotnet build '.\Companionship Barracks.sln' -c Release `
 
 ## 安装
 
+PowerShell 7 中运行仓库根目录脚本即可自动定位、构建并安装：
+
+```powershell
+./Install-Mod.ps1 -WhatIf   # 预览识别结果，不构建或安装
+./Install-Mod.ps1           # Release 构建后安装
+./Install-Mod.ps1 -SkipBuild # 直接安装已构建的 DLL
+```
+
+查找各个就绪磁盘根目录、`Program Files`、`Program Files (x86)` 和 `Games` 下名称包含 Steam 的目录，结合注册表和 `libraryfolders.vdf`，再通过 RimWorld manifest 定位游戏；不递归扫描整盘。多个安装时用 `-RimWorldDir` 指定。也可指定 `-HarmonyDir`（Harmony 的 `1.7/Assemblies`）和 `-Dotnet`（SDK 可执行文件）；默认优先使用仓库 `obj/tools/dotnet/dotnet.exe`，否则使用 PATH 中的 dotnet。
+
+脚本按 packageId 找到旧副本并替换，保留旧目录名称。旧版整个目录（含原源码）移至游戏的 `ModBackups/`，不会留在 `Mods/` 重复扫描。新目录只含发布内容，构建失败不触碰旧安装。安装前退出游戏；脚本不自动启用模组或修改存档。当前针对 1.7，附带保留的 1.6 DLL。
+
+脚本回归检查：`./Tests/Test-InstallMod.ps1`，在仓库 `obj/` 中验证路径发现、备份替换、预览无写入和构建失败保留旧包。
+
+也可手动安装：
+
 将 `About/`、`Common/`、`1.6/`、`1.7/` 和 `LoadFolders.xml` 复制到模组目录，启用 Harmony 后再启用本模组。升级旧安装时移走旧根目录的 `Defs/`、`Assemblies/`，同一 packageId 只保留一份启用的副本。不要将测试模组一起安装到日常游戏。
 
 不要求每次上床立刻产生心情：首次期限前短睡可能没有原版结算；本模组跟随原版时机与资格。营房室友按同房间人类床的登记主人去重统计，不要求当时都在床上。营房记忆按原配置持续 1 天，事件记忆为 3 天，并遵循原版提前清理和堆叠规则。
